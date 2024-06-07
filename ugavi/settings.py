@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'djoser',
     'storages',
     'social_django',
+    'django.contrib.gis',
+    'leaflet',
     'users',
     'fieldmapping',
     'trackapp',
