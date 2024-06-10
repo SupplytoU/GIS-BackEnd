@@ -103,11 +103,14 @@ WSGI_APPLICATION = 'ugavi.wsgi.application'
 
 if DEVELOPMENT_MODE is True:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+    'default': {
+        'ENGINE': getenv('DATABASE_ENGINE'),
+        'NAME': getenv('DATABASE_NAME'),
+        'USER' : getenv('DATABASE_USER'),
+        'PASSWORD' : getenv('DATABASE_PASSWORD'),
+        'HOST' : getenv('DATABASE_HOST'),
     }
+}
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     if getenv('DATABASE_URL', None) is None:
         raise Exception('DATABASE_URL environment variable not defined')

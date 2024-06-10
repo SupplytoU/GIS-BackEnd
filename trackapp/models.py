@@ -1,3 +1,34 @@
 from django.db import models
+from django.contrib.gis.db import models as gis_models
 
-# Create your models here.
+
+class Driver(models.Model):
+    name = models.CharField(max_length=255)
+    license_number = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=255)
+
+
+class Route(models.Model):
+    origin = gis_models.PointField()
+    destination = gis_models.PointField()
+    distance = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class Trip(models.Model):
+    TRIP_STATUS_CHOICES = [
+        ('scheduled', 'Scheduled'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    route = models.ForeignKey(Route, on_delete=models.CASCADE)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=TRIP_STATUS_CHOICES)
+
+
+class TripLog(models.Model):
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField()
+    location = gis_models.PointField()
+    remarks = models.TextField(blank=True)
