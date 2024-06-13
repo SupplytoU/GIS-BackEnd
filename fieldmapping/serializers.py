@@ -11,15 +11,22 @@ class FarmerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farmer
         fields = ['id', 'name', 'phone_number']
-    
-
-class FarmSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Farm
-        fields = ['id', 'name' , 'farm_area' , 'description', 'region', 'location', 'produce']
 
 
 class ProduceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produce
-        fields = ['id', 'produce_type', 'variety', 'description']
+        fields = ['id', 'produce_type', 'variety']    
+
+class FarmSerializer(serializers.ModelSerializer):
+    area = serializers.SerializerMethodField()
+    produce = ProduceSerializer(many=True)
+    class Meta:
+        model = Farm
+        fields = ['id', 'name' , 'farm_area' , 'area', 'description', 'region', 'location', 'produce']
+
+    
+    def get_area(self, obj):
+        return obj.calculate_area()
+
+
