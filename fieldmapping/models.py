@@ -19,7 +19,7 @@ class Location(models.Model):
     date_created = models.DateField()
 
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.name}"
 
     class Meta:
@@ -31,7 +31,7 @@ class Farmer(models.Model):
     phone_number = models.CharField(max_length = 20)
 
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.name}"
 
     class Meta:
@@ -58,21 +58,21 @@ class Farm(models.Model):
     
     
 
-    def str(self):
+    def __str__(self):
         return self.name
 
     class Meta:
         verbose_name_plural = 'Farms'
 
 
-class Crop(models.Model):
-    name = models.CharField(max_length=100)
-    crop_type= models.CharField(max_length=100)
+class Produce(models.Model):
+    produce_type= models.CharField(max_length=100)
+    variety = models.CharField(max_length=225, blank=True)
     description = models.TextField(blank=True, null=True)
     farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name='crops')
 
-    def _str_(self):
-        return self.name
+    def __str__(self):
+        return f'{self.produce_type}'
 
     class Meta:
         verbose_name_plural = 'Crops'

@@ -237,7 +237,3 @@ if name == 'nt':
     # Windows
     GDAL_LIBRARY_PATH = r"D:\OSGeo4w\bin\gdal309.dll"
     GEOS_LIBRARY_PATH = r"D:\OSGeo4w\bin\geos_c.dll"
-else:
-    # Linux
-    GDAL_LIBRARY_PATH = '/usr/lib/libgdal.so.20'
-    GEOS_LIBRARY_PATH = '/usr/lib/libgeos_c.so.1'

@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Location, Farm, Crop
-from .serializers import LocationSerializer, FarmSerializer, CropSerializer
+from .models import Location, Farm, Produce
+from .serializers import LocationSerializer, FarmSerializer, ProduceSerializer
 from django.utils import timezone
 
 
@@ -22,7 +22,7 @@ class LocationList(generics.ListCreateAPIView):
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     """
-    Retrieve, update or delete a code snippet
+    Retrieve, update or delete a location
     """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
@@ -46,8 +46,33 @@ class LabelTypeView(APIView):
 
 
 class FarmList(generics.ListCreateAPIView):
-    queryset = Farm.objects.all()
+    """
+    List all locations or create a new location
+    """
     serializer_class = FarmSerializer
     permission_classes = [permissions.AllowAny]
 
-# Create your views here.
+
+    def get_queryset(self):
+        """
+        Return all farms or filter them by region
+        """
+        queryset = Farm.objects.all()
+        region = self.request.query_params.get('region')
+        if region:
+            queryset = queryset.filter(region=region)
+        return queryset
+    
+
+    def perform_create(self, serializer):
+        validated_data = serializer.validated_data
+        serializer.save(owner=self.request.user)
+
+
+class FarmDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a farm
+    """
+    queryset = Farm.objects.all()
+    serializer_class = FarmSerializer
+    permission_classes = [permissions.AllowAny]
