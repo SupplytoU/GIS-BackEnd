@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import sys
 import dj_database_url
-from os import getenv, path
+from os import getenv, path, name
 from pathlib import Path
 import dotenv
 from django.core.management.utils import get_random_secret_key
@@ -231,3 +231,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.UserAccount"
 
+
+# ndolo gdal work
+if name == 'nt':
+    # Windows
+    GDAL_LIBRARY_PATH = r"D:\OSGeo4w\bin\gdal309.dll"
+    GEOS_LIBRARY_PATH = r"D:\OSGeo4w\bin\geos_c.dll"
+else:
+    # Linux
+    GDAL_LIBRARY_PATH = '/usr/lib/libgdal.so.20'
+    GEOS_LIBRARY_PATH = '/usr/lib/libgeos_c.so.1'
