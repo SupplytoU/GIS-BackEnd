@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from .models import Location, Farm, Produce
 from .serializers import LocationSerializer, FarmSerializer, ProduceSerializer
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 
 class LocationList(generics.ListCreateAPIView):
@@ -55,13 +56,21 @@ class FarmList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         """
-        Return all farms or filter them by region
+        Return all farms or filter them by region, produce
         """
         queryset = Farm.objects.all()
         region = self.request.query_params.get('region')
+        produce= self.request.query_params.get('produce')
+
         if region:
             queryset = queryset.filter(region=region)
+
+        if produce:
+            produce_type = get_object_or_404(Produce, produce_type=produce_type)
+            queryset = queryset.filter(produce_type=produce_type)
+
         return queryset
+
     
 
     def perform_create(self, serializer):
@@ -76,3 +85,17 @@ class FarmDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
     permission_classes = [permissions.AllowAny]
+
+        
+
+
+class ProduceList(generics.ListCreateAPIView):
+    """
+    List all produce or create a new produce
+    """
+    serializer_class = ProduceSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+    def get_queryser(self):
+        pass
