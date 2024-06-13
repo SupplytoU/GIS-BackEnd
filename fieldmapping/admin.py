@@ -15,7 +15,7 @@ admin.site.register(Location, LocationAdmin)
 
 class FarmAdmin(admin.ModelAdmin):
     list_display = ('name', 'region', 'location', 'farmer')
-    list_filter = ('region',)
+    list_filter = ('region', 'produce')
     filter_horizontal = ('produce',)
 
 admin.site.register(Farm, FarmAdmin)

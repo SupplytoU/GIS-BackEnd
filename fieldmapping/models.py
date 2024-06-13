@@ -17,10 +17,10 @@ class Location(models.Model):
     location = gis_models.PointField(srid=4326)
     description = models.TextField(blank=True, null=True)
     date_created = models.DateField()
-
+    
 
     def __str__(self):
-        return f"{self.name}"
+        return f'{self.name}'
 
     class Meta:
         verbose_name_plural = 'Locations'
@@ -44,7 +44,10 @@ class Produce(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f'{self.produce_type}'
+        if self.variety:
+            return f'{self.produce_type} variety: {self.variety}'
+        else:
+            return f'{self.produce_type}'
 
     class Meta:
         verbose_name_plural = 'Crops'
@@ -67,12 +70,16 @@ class Farm(models.Model):
     region = models.CharField(max_length=100, choices=REGION_CHOICES)
     location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name='farms')
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='farms')
-    produce = models.ManyToManyField(Produce, related_name='produce')
+    produce = models.ManyToManyField(Produce, related_name='farms')
     
+    
+    def calculate_area(self):
+        transformed_polygon = self.farm_area.transform(3857, clone=True)
+        return f'{transformed_polygon.area:.2f} square meters'
     
 
     def __str__(self):
-        return '{self.name}'
+        return f'{self.name}'
 
     class Meta:
         verbose_name_plural = 'Farms'

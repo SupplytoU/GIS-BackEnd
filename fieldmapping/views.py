@@ -30,7 +30,7 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-class LabelTypeView(APIView):
+class LocationLabelTypeView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, label, *args, **kwargs):
@@ -66,8 +66,8 @@ class FarmList(generics.ListCreateAPIView):
             queryset = queryset.filter(region=region)
 
         if produce:
-            produce_type = get_object_or_404(Produce, produce_type=produce_type)
-            queryset = queryset.filter(produce_type=produce_type)
+            produce_type = get_object_or_404(Produce, produce_type=produce)
+            queryset = queryset.filter(produce=produce_type)
 
         return queryset
 
@@ -93,9 +93,7 @@ class ProduceList(generics.ListCreateAPIView):
     """
     List all produce or create a new produce
     """
+    queryset = Produce.objects.all()
     serializer_class = ProduceSerializer
     permission_classes = [permissions.AllowAny]
 
-
-    def get_queryser(self):
-        pass
