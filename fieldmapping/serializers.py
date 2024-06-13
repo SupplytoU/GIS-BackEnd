@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Location, Farm, Produce, Farmer
+from .models import Location, Farm, Farmer, Produce
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ['id', 'name' , 'label' , 'location', 'description']
+        fields = ['id', 'name' , 'label' , 'location', 'description', 'date_created']
 
 
 class FarmerSerializer(serializers.ModelSerializer):
@@ -16,10 +16,10 @@ class FarmerSerializer(serializers.ModelSerializer):
 class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farm
-        fields = ['id', 'name' , 'farm_area' , 'description', 'region', 'location']
+        fields = ['id', 'name' , 'farm_area' , 'description', 'region', 'location', 'produce']
 
 
 class ProduceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produce
-        fields = ['id', 'produce_type', 'variety', 'description', 'farm']
+        fields = ['id', 'produce_type', 'variety', 'description']

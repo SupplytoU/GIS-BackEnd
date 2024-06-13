@@ -7,7 +7,8 @@ urlpatterns = [
     path('locations/<int:pk>/', views.LocationDetail.as_view(), name='location-detail'),
     path('locations/<str:label>/', views.LabelTypeView.as_view(), name='location-type'),
     path('farms/', views.FarmList.as_view(), name='farms'),
-    path('farms/<int:pk>/', views.FarmDetail.as_view(), name='farm-detail')
+    path('farms/<int:pk>/', views.FarmDetail.as_view(), name='farm-detail'),
+    path('farms/by-crop/', views.FarmList.as_view(), name='farm-list-by-crop'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

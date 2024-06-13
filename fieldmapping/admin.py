@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils import timezone
-from .models import Location, Farm, Produce, Farmer
+from .models import Location, Farm, Farmer, Produce
 
 class LocationAdmin(admin.ModelAdmin):
     readonly_fields = ('date_created',)
@@ -16,6 +16,7 @@ admin.site.register(Location, LocationAdmin)
 class FarmAdmin(admin.ModelAdmin):
     list_display = ('name', 'region', 'location', 'farmer')
     list_filter = ('region',)
+    filter_horizontal = ('produce',)
 
 admin.site.register(Farm, FarmAdmin)
 admin.site.register(Produce)

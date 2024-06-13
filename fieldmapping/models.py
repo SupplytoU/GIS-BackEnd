@@ -38,6 +38,18 @@ class Farmer(models.Model):
         verbose_name_plural = 'Farmers'
 
 
+class Produce(models.Model):
+    produce_type= models.CharField(max_length=100)
+    variety = models.CharField(max_length=225, blank=True)
+    description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.produce_type}'
+
+    class Meta:
+        verbose_name_plural = 'Crops'
+
+        
 class Farm(models.Model):
     REGION_CHOICES = [
         ('central', 'Central'),
@@ -53,26 +65,17 @@ class Farm(models.Model):
     farm_area =gis_models.PolygonField(srid=4326)
     description = models.TextField(blank=True, null=True)
     region = models.CharField(max_length=100, choices=REGION_CHOICES)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='farms')
+    location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name='farms')
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='farms')
+    produce = models.ManyToManyField(Produce, related_name='produce')
     
     
 
     def __str__(self):
-        return self.name
+        return '{self.name}'
 
     class Meta:
         verbose_name_plural = 'Farms'
 
 
-class Produce(models.Model):
-    produce_type= models.CharField(max_length=100)
-    variety = models.CharField(max_length=225, blank=True)
-    description = models.TextField(blank=True, null=True)
-    farm = models.ForeignKey(Farm, on_delete=models.CASCADE, related_name='crops')
 
-    def __str__(self):
-        return f'{self.produce_type}'
-
-    class Meta:
-        verbose_name_plural = 'Crops'
