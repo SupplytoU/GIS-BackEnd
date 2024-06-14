@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+from django.utils import timezone
 
 
 # Create your models here.
@@ -16,8 +17,7 @@ class Location(models.Model):
     label = models.CharField(max_length=100, choices=LABEL_CHOICES)
     location = gis_models.PointField(srid=4326)
     description = models.TextField(blank=True, null=True)
-    date_created = models.DateField()
-    
+    date_created = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f'{self.name}'
@@ -73,6 +73,7 @@ class Farm(models.Model):
     produce = models.ManyToManyField(Produce, related_name='farms')
     
     
+    @property
     def calculate_area(self):
         transformed_polygon = self.farm_area.transform(3857, clone=True)
         return f'{transformed_polygon.area:.2f} square meters'
