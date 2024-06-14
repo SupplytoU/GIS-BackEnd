@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Location, Farm, Produce
-from .serializers import LocationSerializer, FarmSerializer, ProduceSerializer
+from .models import Location, Farm, Produce, Farmer
+from .serializers import LocationSerializer, FarmSerializer, ProduceSerializer, FarmerSerializer
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
@@ -41,7 +41,6 @@ class LocationLabelTypeView(APIView):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        
 
 
 class FarmList(generics.ListCreateAPIView):
@@ -51,14 +50,13 @@ class FarmList(generics.ListCreateAPIView):
     serializer_class = FarmSerializer
     permission_classes = [permissions.AllowAny]
 
-
     def get_queryset(self):
         """
         Return all farms or filter them by region, produce
         """
         queryset = Farm.objects.all()
         region = self.request.query_params.get('region')
-        produce= self.request.query_params.get('produce')
+        produce = self.request.query_params.get('produce')
 
         if region:
             queryset = queryset.filter(region=region)
@@ -69,10 +67,17 @@ class FarmList(generics.ListCreateAPIView):
 
         return queryset
 
-    
-
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        produce_data = self.request.data.pop('produce', None)
+
+        farm = serializer.save()
+
+        if produce_data:
+            for produce_item in produce_data:
+                produce_serializer = ProduceSerializer(data=produce_item)
+                produce_serializer.is_valid(raise_exception=True)
+                produce = produce_serializer.save()
+                farm.produce.add(produce)
 
 
 class FarmDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -83,8 +88,6 @@ class FarmDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = FarmSerializer
     permission_classes = [permissions.AllowAny]
 
-        
-
 
 class ProduceList(generics.ListCreateAPIView):
     """
@@ -94,3 +97,11 @@ class ProduceList(generics.ListCreateAPIView):
     serializer_class = ProduceSerializer
     permission_classes = [permissions.AllowAny]
 
+
+class FarmerList(generics.ListCreateAPIView):
+    """
+    List all farmers or create a new farmer
+    """
+    queryset = Farmer.objects.all()
+    serializer_class = FarmerSerializer
+    permission_classes = [permissions.AllowAny]
