@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Location, Farm, Farmer, Produce
 
 class LocationSerializer(serializers.ModelSerializer):
+    date_created = serializers.ReadOnlyField()
     class Meta:
         model = Location
         fields = ['id', 'name' , 'label' , 'location', 'description', 'date_created']
@@ -19,7 +20,7 @@ class ProduceSerializer(serializers.ModelSerializer):
         fields = ['id', 'produce_type', 'variety']    
 
 class FarmSerializer(serializers.ModelSerializer):
-    area = serializers.SerializerMethodField()
+    area = serializers.ReadOnlyField()
     produce = ProduceSerializer(many=True)
     class Meta:
         model = Farm

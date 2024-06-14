@@ -15,10 +15,8 @@ class LocationList(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     permission_classes = [permissions.AllowAny]
 
-    def perform_create(self, serializer):
-        validated_data = serializer.validated_data
-        validated_data['date_created'] = timezone.now()
-        serializer.save(owner=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
 
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -74,7 +72,6 @@ class FarmList(generics.ListCreateAPIView):
     
 
     def perform_create(self, serializer):
-        validated_data = serializer.validated_data
         serializer.save(owner=self.request.user)
 
 
