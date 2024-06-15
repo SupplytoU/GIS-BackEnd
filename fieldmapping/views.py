@@ -1,10 +1,11 @@
+from django.core.exceptions import MultipleObjectsReturned
+from django.http import Http404
 from rest_framework import generics, permissions, status
+from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Location, Farm, Produce, Farmer
 from .serializers import LocationSerializer, FarmSerializer, ProduceSerializer, FarmerSerializer
-from django.utils import timezone
-from django.shortcuts import get_object_or_404
 
 
 class LocationList(generics.ListCreateAPIView):
@@ -38,9 +39,9 @@ class LocationLabelTypeView(APIView):
         location_type = Location.objects.filter(label=label)
         if location_type.exists():
             serializer = LocationSerializer(location_type, many=True)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'detail': 'No locations found with that label'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class FarmList(generics.ListCreateAPIView):
@@ -52,18 +53,32 @@ class FarmList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         """
-        Return all farms or filter them by region, produce
+        Return all farms or filter them by region, produce. Return 404 if no matching farms are found.
         """
         queryset = Farm.objects.all()
         region = self.request.query_params.get('region')
         produce = self.request.query_params.get('produce')
 
         if region:
+            if not Farm.objects.filter(region=region).exists():
+                raise NotFound('No farm in the reqion {}'.format(region))
             queryset = queryset.filter(region=region)
 
         if produce:
-            produce_type = get_object_or_404(Produce, produce_type=produce)
-            queryset = queryset.filter(produce=produce_type)
+            try:
+                produce_type = Produce.objects.get(produce_type=produce)
+                queryset = queryset.filter(produce=produce_type)
+            except Produce.DoesNotExist:
+                raise NotFound("No produce found with that type.")
+            except MultipleObjectsReturned:
+                produce_objects = Produce.objects.filter(produce_type=produce)
+                if produce_objects.exists():
+                    queryset = queryset.filter(produce__in=produce_objects)
+                else:
+                    raise NotFound("No produce found with that type.")
+
+        if not queryset.exists():
+            raise NotFound("No farms found with the given criteria.")
 
         return queryset
 
