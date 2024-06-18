@@ -16,6 +16,24 @@ class LocationList(generics.ListCreateAPIView):
     serializer_class = LocationSerializer
     permission_classes = [permissions.AllowAny]
 
+
+    def get_queryset(self):
+        """
+        Return all farms or filter them by region, produce. Return 404 if no matching farms are found.
+        """
+        queryset = Location.objects.all()
+        region = self.request.query_params.get('region')
+
+        if region:
+            if not Location.objects.filter(region=region).exists():
+                raise NotFound('No location in the region {}'.format(region))
+            queryset = queryset.filter(region=region)
+
+        if not queryset.exists():
+            raise NotFound("No location found with the given criteria.")
+
+        return queryset
+
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
 
