@@ -24,10 +24,13 @@ class Driver(models.Model):
 
 
 class Route(models.Model):
-    origin = gis_models.PointField()
-    destination = gis_models.PointField()
+    origin = models.CharField(max_length=100)
+    destination = models.CharField(max_length=100)
     distance = models.DecimalField(max_digits=10, decimal_places=2)
 
+
+    def __str__(self):
+        return f'{self.origin} to {self.destination}'
 
 class Trip(models.Model):
     TRIP_STATUS_CHOICES = [

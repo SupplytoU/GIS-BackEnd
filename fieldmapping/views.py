@@ -1,5 +1,4 @@
 from django.core.exceptions import MultipleObjectsReturned
-from django.http import Http404
 from rest_framework import generics, permissions, status
 from rest_framework.exceptions import NotFound
 from rest_framework.views import APIView

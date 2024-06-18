@@ -1,8 +1,23 @@
 from django.contrib import admin
+from django import forms
 from .models import Vehicle, Driver, Route, Trip, TripLog
+from fieldmapping.models import Location
 
 admin.site.register(Vehicle)
 admin.site.register(Driver)
-admin.site.register(Route)
+
+
+class RouteAdminForm(forms.ModelForm):
+    origin = forms.ModelChoiceField(queryset=Location.objects.all())
+    destination = forms.ModelChoiceField(queryset=Location.objects.all())
+
+    class Meta:
+        model = Route
+        fields = ['origin', 'destination', 'distance']
+
+class RouteAdmin(admin.ModelAdmin):
+    form = RouteAdminForm
+
+admin.site.register(Route, RouteAdmin)
 admin.site.register(Trip)
 admin.site.register(TripLog)
