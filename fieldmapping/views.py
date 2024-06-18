@@ -46,7 +46,7 @@ class LocationLabelTypeView(APIView):
 
 class FarmList(generics.ListCreateAPIView):
     """
-    List all locations or create a new location
+    List all farms or create a new farm
     """
     serializer_class = FarmSerializer
     permission_classes = [permissions.AllowAny]
@@ -56,13 +56,13 @@ class FarmList(generics.ListCreateAPIView):
         Return all farms or filter them by region, produce. Return 404 if no matching farms are found.
         """
         queryset = Farm.objects.all()
-        region = self.request.query_params.get('region')
+        # region = self.request.query_params.get('region')
         produce = self.request.query_params.get('produce')
 
-        if region:
-            if not Farm.objects.filter(region=region).exists():
-                raise NotFound('No farm in the reqion {}'.format(region))
-            queryset = queryset.filter(region=region)
+        # if region:
+        #     if not Farm.objects.filter(region=region).exists():
+        #         raise NotFound('No farm in the reqion {}'.format(region))
+        #     queryset = queryset.filter(region=region)
 
         if produce:
             try:

@@ -7,7 +7,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ['id', 'name', 'label', 'location', 'description', 'date_created']
+        fields = ['id', 'name', 'label', 'location', 'region', 'description', 'date_created']
 
 
 class FarmerSerializer(serializers.ModelSerializer):
@@ -39,7 +39,7 @@ class FarmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farm
-        fields = ['name', 'farm_area', 'area', 'description', 'region', 'location', 'produce', 'farmer']
+        fields = ['name', 'farm_area', 'area', 'description', 'location', 'produce', 'farmer']
 
     def get_area(self, obj):
         return obj.calculate_area

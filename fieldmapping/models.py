@@ -13,11 +13,22 @@ class Location(models.Model):
         ('restaurants', 'Restaurant'),
         ('supermarkets', 'Supermarket')
     ]
+    REGION_CHOICES = [
+        ('central', 'Central'),
+        ('coast', 'Coast'),
+        ('eastern', 'Eastern'),
+        ('nairobi', 'Nairobi'),
+        ('north_eastern', 'North Eastern'),
+        ('nyanza', 'Nyanza'),
+        ('rift_valley', 'Rift Valley'),
+        ('western', 'Western')
+    ]
     name = models.CharField(max_length=100)
     label = models.CharField(max_length=100, choices=LABEL_CHOICES)
-    location = gis_models.PointField(srid=4326)
+    region = models.CharField(max_length=100, choices=REGION_CHOICES)
     description = models.TextField(blank=True, null=True)
     date_created = models.DateField(default=timezone.now)
+    location = gis_models.PointField(srid=4326)
 
     def __str__(self):
         return f'{self.name}'
@@ -53,20 +64,9 @@ class Produce(models.Model):
 
         
 class Farm(models.Model):
-    REGION_CHOICES = [
-        ('central', 'Central'),
-        ('coast', 'Coast'),
-        ('eastern', 'Eastern'),
-        ('nairobi', 'Nairobi'),
-        ('north_eastern', 'North Eastern'),
-        ('nyanza', 'Nyanza'),
-        ('rift_valley', 'Rift Valley'),
-        ('western', 'Western')
-    ]
     name = models.CharField(max_length=100)
     farm_area = gis_models.PolygonField(srid=4326)
     description = models.TextField(blank=True, null=True)
-    region = models.CharField(max_length=100, choices=REGION_CHOICES)
     location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name='farms')
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='farms')
     produce = models.ManyToManyField(Produce, related_name='farms')
