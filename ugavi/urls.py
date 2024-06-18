@@ -6,6 +6,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('djoser.urls')),
     path('api/', include('users.urls')),
-    path('', include('fieldmapping.urls'))
+    path('', include('fieldmapping.urls')),
+    path('', include('trackapp.urls'))
     
 ]

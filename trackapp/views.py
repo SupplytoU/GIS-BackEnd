@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from rest_framework import generics, permissions
+from .serializers import *
+from .models import *
 
-# Create your views here.
+
+class RouteCreateListView(generics.ListCreateAPIView):
+    queryset = Route.objects.all()
+    serializer_class = RouteSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class RouteDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Route.objects.all()
+    serializer_class = RouteSerializer
+    permission_classes = [permissions.AllowAny]
