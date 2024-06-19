@@ -13,12 +13,11 @@ class RouteAdminForm(forms.ModelForm):
 
     class Meta:
         model = Route
-        fields = ['origin', 'destination', 'distance']
-
+        fields = ['origin', 'destination']
 
 class RouteAdmin(admin.ModelAdmin):
     form = RouteAdminForm
-
+    readonly_fields = ('distance',)
 
 admin.site.register(Route, RouteAdmin)
 
