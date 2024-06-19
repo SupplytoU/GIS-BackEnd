@@ -1,16 +1,17 @@
 from django.db import models
 from django.contrib.gis.db import models as gis_models
+from fieldmapping.models import Location
+
 
 class Vehicle(models.Model):
     VEHICLE_TYPE_CHOICES = [
-        ('pickup','Pickup'),
-        ('canter','Canter'),
-        ('lorry','Lorry'),
+        ('pickup', 'Pickup'),
+        ('canter', 'Canter'),
+        ('lorry', 'Lorry'),
         ('trailer', 'Trailer')
     ]
     number_plate = models.CharField(max_length=255)
     vehicle_type = models.CharField(max_length=20, choices=VEHICLE_TYPE_CHOICES)
-
 
 
 class Driver(models.Model):
@@ -24,13 +25,13 @@ class Driver(models.Model):
 
 
 class Route(models.Model):
-    origin = models.CharField(max_length=100)
-    destination = models.CharField(max_length=100)
+    origin = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='route_origin')
+    destination = models.ForeignKey(Location, on_delete=models.CASCADE, related_name='route_destination')
     distance = models.DecimalField(max_digits=10, decimal_places=2)
-
 
     def __str__(self):
         return f'{self.origin} to {self.destination}'
+
 
 class Trip(models.Model):
     TRIP_STATUS_CHOICES = [

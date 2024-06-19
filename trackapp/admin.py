@@ -8,16 +8,19 @@ admin.site.register(Driver)
 
 
 class RouteAdminForm(forms.ModelForm):
-    origin = forms.ModelChoiceField(queryset=Location.objects.all())
-    destination = forms.ModelChoiceField(queryset=Location.objects.all())
+    origin = forms.ModelChoiceField(queryset=Location.objects.all(), to_field_name='name')
+    destination = forms.ModelChoiceField(queryset=Location.objects.all(), to_field_name='name')
 
     class Meta:
         model = Route
         fields = ['origin', 'destination', 'distance']
 
+
 class RouteAdmin(admin.ModelAdmin):
     form = RouteAdminForm
 
+
 admin.site.register(Route, RouteAdmin)
+
 admin.site.register(Trip)
 admin.site.register(TripLog)

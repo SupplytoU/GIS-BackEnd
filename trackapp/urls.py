@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import *
+from .views import RouteCreateListView, RouteDetailView
 
 urlpatterns = [
     path('routes/', RouteCreateListView.as_view(), name='routes'),
