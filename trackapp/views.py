@@ -1,5 +1,5 @@
 from rest_framework import generics, permissions
-from .serializers import *
+from .serializers import RouteSerializer
 from .models import *
 
 

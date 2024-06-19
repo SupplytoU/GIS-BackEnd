@@ -1,7 +1,6 @@
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 from django.utils import timezone
-from django.core.serializers import serialize
 from .models import Location, Farm, Farmer, Produce
 
 
