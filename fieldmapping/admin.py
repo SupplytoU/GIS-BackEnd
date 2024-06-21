@@ -37,7 +37,6 @@ admin.site.register(Location, CustomLocationAdmin)
 
 
 class CustomFarmAdmin(LeafletGeoAdmin, admin.ModelAdmin):
-    list_display = ('name', 'location', 'farmer')
     list_filter = ('produce', 'farmer')
     filter_horizontal = ('produce',)
     change_list_template = 'admin/fieldmapping/farm/farm_change_list.html'
