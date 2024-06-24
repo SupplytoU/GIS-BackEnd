@@ -66,9 +66,9 @@ class Location(models.Model):
         ('coast', 'Coast'),
         ('eastern', 'Eastern'),
         ('nairobi', 'Nairobi'),
-        ('north_eastern', 'North Eastern'),
+        ('north-eastern', 'North Eastern'),
         ('nyanza', 'Nyanza'),
-        ('rift_valley', 'Rift Valley'),
+        ('rift-valley', 'Rift Valley'),
         ('western', 'Western')
     ]
     name = models.CharField(max_length=100)
