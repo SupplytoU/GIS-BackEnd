@@ -219,7 +219,7 @@ LEAFLET_CONFIG = {
 
 
 AUTH_COOKIE = 'access'
-AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 5
+AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 10
 AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24
 AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True') == 'True' 
 AUTH_COOKIE_HTTP_ONLY = True
@@ -237,8 +237,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
 
 CORS_ALLOWED_ORIGINS = getenv(
     'CORS_ALLOWED_ORIGINS', 
-    'http://localhost:3000,http://127.0.0.1.3000'
-    ).split(',')
+    'http://localhost:3000, http://127.0.0.1.3000'
+).split(',')
+
 
 CORS_ALLOW_CREDENTIALS = True
 
