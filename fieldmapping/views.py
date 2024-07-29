@@ -13,8 +13,7 @@ class LocationList(generics.ListCreateAPIView):
     """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-    permission_classes = [permissions.AllowAny]
-
+    
 
     def get_queryset(self):
         """
@@ -33,8 +32,8 @@ class LocationList(generics.ListCreateAPIView):
 
         return queryset
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -43,12 +42,11 @@ class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-    permission_classes = [permissions.AllowAny]
+
 
 
 class LocationLabelTypeView(APIView):
-    permission_classes = [permissions.AllowAny]
-
+    
     def get(self, request, label, *args, **kwargs):
         """
         filters the different types of locations
@@ -66,20 +64,14 @@ class FarmList(generics.ListCreateAPIView):
     List all farms or create a new farm
     """
     serializer_class = FarmSerializer
-    permission_classes = [permissions.AllowAny]
+    
 
     def get_queryset(self):
         """
         Return all farms or filter them by region, produce. Return 404 if no matching farms are found.
         """
         queryset = Farm.objects.all()
-        # region = self.request.query_params.get('region')
         produce = self.request.query_params.get('produce')
-
-        # if region:
-        #     if not Farm.objects.filter(region=region).exists():
-        #         raise NotFound('No farm in the reqion {}'.format(region))
-        #     queryset = queryset.filter(region=region)
 
         if produce:
             try:
@@ -118,7 +110,6 @@ class FarmDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Farm.objects.all()
     serializer_class = FarmSerializer
-    permission_classes = [permissions.AllowAny]
 
 
 class ProduceList(generics.ListCreateAPIView):
@@ -127,7 +118,6 @@ class ProduceList(generics.ListCreateAPIView):
     """
     queryset = Produce.objects.all()
     serializer_class = ProduceSerializer
-    permission_classes = [permissions.AllowAny]
 
 
 class FarmerList(generics.ListCreateAPIView):
@@ -136,4 +126,4 @@ class FarmerList(generics.ListCreateAPIView):
     """
     queryset = Farmer.objects.all()
     serializer_class = FarmerSerializer
-    permission_classes = [permissions.AllowAny]
+
