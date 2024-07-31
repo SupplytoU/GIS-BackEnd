@@ -187,20 +187,22 @@ REST_FRAMEWORK = {
         'users.authentication.CustomJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.AllowAny'
     ]
 }
 
+REDIRECT_URLS = getenv('REDIRECT_URLS', 'http://localhost:3000/auth/google, https://127.0.0.1:3000').split(',')
+
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '/activate/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
     'USER_CREATE_PASSWORD_RETYPE' : True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE':True,
     'LOGOUT_ON_PASSWORD_CHANGE':True,
     'TOKEN_MODEL':None,
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': getenv('REDIRECT_URLS'),
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': REDIRECT_URLS,
     'SERIALIZERS': {},
 }
 
