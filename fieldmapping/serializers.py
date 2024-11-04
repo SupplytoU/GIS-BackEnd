@@ -36,10 +36,11 @@ class ProduceSerializer(serializers.ModelSerializer):
 class FarmSerializer(serializers.ModelSerializer):
     area = serializers.SerializerMethodField()
     produce = serializers.SerializerMethodField()
+    farmer = serializers.CharField()  # Accept farmer name as a string
 
     class Meta:
         model = Farm
-        fields = ['name', 'farm_area', 'area', 'description', 'location', 'produce', 'farmer']
+        fields = ['name', 'farm_area', 'area', 'description', 'produce', 'farmer']
 
     def get_area(self, obj):
         return obj.calculate_area
@@ -48,4 +49,28 @@ class FarmSerializer(serializers.ModelSerializer):
         produce = obj.produce.all()
         serializer = ProduceSerializer(produce, many=True, fields=['produce_type', 'variety'])
         return serializer.data
+
+    def create(self, validated_data):
+        farmer_name = validated_data.pop('farmer')  # Extract the farmer name from validated data
+        try:
+            # Look up the farmer instance by name
+            farmer_instance = Farmer.objects.get(name=farmer_name)
+            validated_data['farmer'] = farmer_instance  # Set the farmer instance
+        except Farmer.DoesNotExist:
+            raise serializers.ValidationError(f"Farmer with name '{farmer_name}' does not exist.")
+        
+        # Now create the Farm instance
+        farm = Farm.objects.create(**validated_data)  # Create Farm instance
+        return farm
+
+    def update(self, instance, validated_data):
+        farmer_name = validated_data.pop('farmer', None)  # Extract farmer name if provided
+        if farmer_name:
+            try:
+                farmer_instance = Farmer.objects.get(name=farmer_name)
+                validated_data['farmer'] = farmer_instance  # Set the farmer instance for update
+            except Farmer.DoesNotExist:
+                raise serializers.ValidationError(f"Farmer with name '{farmer_name}' does not exist.")
+        
+        return super().update(instance, validated_data)  # Call the parent update method
 
