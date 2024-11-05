@@ -33,7 +33,7 @@ class LocationList(generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
 
 class LocationDetail(generics.RetrieveUpdateDestroyAPIView):
