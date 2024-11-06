@@ -36,14 +36,10 @@ class Farm(models.Model):
     name = models.CharField(max_length=100)
     farm_area = gis_models.PolygonField(srid=4326)
     description = models.TextField(blank=True, null=True)
-    # location = models.OneToOneField(Location, on_delete=models.CASCADE, related_name='farms')
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='farms')
     produce = models.ManyToManyField(Produce, related_name='farms')
 
-    @property
-    def calculate_area(self):
-        transformed_polygon = self.farm_area.transform(3857, clone=True)
-        return f'{transformed_polygon.area:.2f} square meters'
+
 
     def __str__(self):
         return f'{self.name}'
