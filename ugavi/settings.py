@@ -260,8 +260,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "users.UserAccount"
 
 
-# ndolo gdal work
+# Ndolo gdal work
 if name == 'nt':
     # Windows
-    GDAL_LIBRARY_PATH = r"D:\OSGeo4w\bin\gdal309.dll"
-    GEOS_LIBRARY_PATH = r"D:\OSGeo4w\bin\geos_c.dll"
+    GDAL_LIBRARY_PATH = r"E:\OSGeo4w\bin\gdal309.dll"
+    GEOS_LIBRARY_PATH = r"E:\OSGeo4w\bin\geos_c.dll"
+    PROJ_LIBRARY_PATH = r"E:\OSGeo4w\bin\proj_9_4.dll"

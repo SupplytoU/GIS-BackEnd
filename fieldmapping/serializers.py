@@ -34,16 +34,13 @@ class ProduceSerializer(serializers.ModelSerializer):
 
 
 class FarmSerializer(serializers.ModelSerializer):
-    area = serializers.SerializerMethodField()
     produce = serializers.SerializerMethodField()
     farmer = serializers.CharField()  # Accept farmer name as a string
 
     class Meta:
         model = Farm
-        fields = ['name', 'farm_area', 'area', 'description', 'produce', 'farmer']
+        fields = ['name', 'farm_area', 'description', 'produce', 'farmer']
 
-    def get_area(self, obj):
-        return obj.calculate_area
 
     def get_produce(self, obj):
         produce = obj.produce.all()
