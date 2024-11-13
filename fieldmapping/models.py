@@ -35,11 +35,10 @@ class Produce(models.Model):
 class Farm(models.Model):
     name = models.CharField(max_length=100)
     farm_area = gis_models.PolygonField(srid=4326)
+    area_acres = models.FloatField()
     description = models.TextField(blank=True, null=True)
     farmer = models.ForeignKey(Farmer, on_delete=models.CASCADE, related_name='farms')
     produce = models.ManyToManyField(Produce, related_name='farms')
-
-
 
     def __str__(self):
         return f'{self.name}'
