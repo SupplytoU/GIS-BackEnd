@@ -39,7 +39,7 @@ class FarmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farm
-        fields = ['name', 'farm_area', 'description', 'produce', 'farmer']
+        fields = ['name', 'farm_area', 'area_acres', 'description', 'produce', 'farmer']
 
 
     def get_produce(self, obj):
