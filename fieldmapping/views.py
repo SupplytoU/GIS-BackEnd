@@ -119,6 +119,14 @@ class ProduceList(generics.ListCreateAPIView):
     queryset = Produce.objects.all()
     serializer_class = ProduceSerializer
 
+class ProduceDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a produce
+    """
+    queryset = Produce.objects.all()
+    serializer_class = ProduceSerializer
+
+
 
 class FarmerList(generics.ListCreateAPIView):
     """
@@ -126,4 +134,12 @@ class FarmerList(generics.ListCreateAPIView):
     """
     queryset = Farmer.objects.all()
     serializer_class = FarmerSerializer
+
+class FarmerDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a farmer
+    """
+    queryset = Farmer.objects.all()
+    serializer_class = FarmerSerializer
+
 
