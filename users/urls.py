@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-from .views import CustomTokenObtainPairView, CustomTokenRefreshView, CustomTokenVerifyView, LogoutView, CustomProviderAuthView
+from .views import CustomTokenObtainPairView, CustomTokenRefreshView, CustomTokenVerifyView, LogoutView, CustomProviderAuthView, UserDetailView
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('jwt/refresh/', CustomTokenRefreshView.as_view()),
     path('jwt/verify/', CustomTokenVerifyView.as_view()),
     path('logout/', LogoutView.as_view()),
+    path('users/me/',UserDetailView.as_view())
 ]

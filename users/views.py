@@ -1,10 +1,11 @@
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from djoser.social.views import ProviderAuthView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
-
+from .models import UserAccount
+from .serializers import UserAccountSerializer
 
 class CustomProviderAuthView(ProviderAuthView):
     def post(self, request, *args, **kwargs):
@@ -118,3 +119,11 @@ class LogoutView(APIView):
         response.delete_cookie('refresh')
 
         return response
+    
+
+class UserDetailView(generics.RetrieveUpdateAPIView):
+    queryset = UserAccount.objects.all()
+    serializer_class = UserAccountSerializer
+
+    # def get_object(self):
+    #     return self.request.user
