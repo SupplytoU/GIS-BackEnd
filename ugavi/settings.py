@@ -194,7 +194,7 @@ REST_FRAMEWORK = {
         'users.authentication.CustomJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.IsAuthenticated'
     ]
 }
 
@@ -233,7 +233,7 @@ AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24
 AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True') == 'True' 
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
-AUTH_COOKIE_SAMESITE = 'None'  # cross-origin cookies
+AUTH_COOKIE_SAMESITE = 'Lax'  # cross-origin cookies
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = getenv('GOOGLE_AUTH_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = getenv('GOOGLE_AUTH_SECRET_KEY')
@@ -251,6 +251,12 @@ CORS_ALLOWED_ORIGINS = getenv(
 
 
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
