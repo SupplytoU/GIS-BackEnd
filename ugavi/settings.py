@@ -108,22 +108,16 @@ WSGI_APPLICATION = 'ugavi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if DEVELOPMENT_MODE is True:
-    DATABASES = {
-        'default': {
-            'ENGINE': getenv('DATABASE_ENGINE'),
-            'NAME': getenv('DATABASE_NAME'),
-            'USER': getenv('DATABASE_USER'),
-            'PASSWORD': getenv('DATABASE_PASSWORD'),
-            'HOST': getenv('DATABASE_HOST'),
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': getenv('DATABASE_ENGINE'),
+        'NAME': getenv('DATABASE_NAME'),
+        'USER': getenv('DATABASE_USER'),
+        'PASSWORD': getenv('DATABASE_PASSWORD'),
+        'HOST': getenv('DATABASE_HOST'),
     }
-elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if getenv('DATABASE_URL', None) is None:
-        raise Exception('DATABASE_URL environment variable not defined')
-    DATABASES = {
-        'default': dj_database_url.parse(getenv('DATABASE_URL')),
-    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -230,7 +224,7 @@ AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24
 AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True') == 'True'
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
-AUTH_COOKIE_SAMESITE = 'None'  
+AUTH_COOKIE_SAMESITE = 'None'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = getenv('GOOGLE_AUTH_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = getenv('GOOGLE_AUTH_SECRET_KEY')
