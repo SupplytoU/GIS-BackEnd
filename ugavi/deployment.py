@@ -17,9 +17,9 @@ if not ALLOWED_HOSTS or ALLOWED_HOSTS == ['']:
                                                                
 CSRF_TRUSTED_ORIGINS = ['https://'+os.environ.get('WEBSITE_HOSTNAME')]
 
-REDIRECT_URLS = os.environ.get('REDIRECT_URLS', '').split(',')
-if not REDIRECT_URLS or REDIRECT_URLS == ['']:
-    raise Exception('REDIRECT_URLS environment variable not defined or empty')
+# REDIRECT_URLS = os.environ.get('REDIRECT_URLS', '').split(',')
+# if not REDIRECT_URLS or REDIRECT_URLS == ['']:
+#     raise Exception('REDIRECT_URLS environment variable not defined or empty')
 
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
