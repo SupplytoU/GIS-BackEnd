@@ -5,7 +5,7 @@ from settings import BASE_DIR
 dotenv_file = BASE_DIR / '.env.production'
 dotenv.load_dotenv(dotenv_file)
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get('MY_SECRET_KEY')
 if not SECRET_KEY:
     raise Exception('DJANGO_SECRET_KEY environment variable not defined')
 
