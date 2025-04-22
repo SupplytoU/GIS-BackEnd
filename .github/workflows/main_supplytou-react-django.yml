@@ -24,6 +24,11 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Install GDAL library
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gdal-bin libgdal-dev
+
       - name: Create and start virtual environment
         run: |
           python -m venv venv
