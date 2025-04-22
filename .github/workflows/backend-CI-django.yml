@@ -21,10 +21,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install PostgreSQL
+      - name: Install and start PostgreSQL
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql postgresql-contrib postgis
+          sudo systemctl start postgresql
+          sudo systemctl status postgresql  
+          timeout 20 bash -c 'until sudo -u postgres psql -c "SELECT 1" >/dev/null 2>&1; do sleep 1; done'
 
       - name: Setup test database
         run: |
