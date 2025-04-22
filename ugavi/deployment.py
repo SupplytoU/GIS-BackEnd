@@ -22,7 +22,22 @@ if not REDIRECT_URLS or REDIRECT_URLS == ['']:
     raise Exception('REDIRECT_URLS environment variable not defined or empty')
 
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')  
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CORS_ALLOWED_ORIGINS = [
+    'https://kind-bay-0936ad310.6.azurestaticapps.net' 
+]
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 SECURE_SSL_REDIRECT = True
