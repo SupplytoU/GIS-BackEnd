@@ -1,6 +1,6 @@
 import os
-from settings import *
-from settings import BASE_DIR                                                               
+from ugavi.settings import *
+from ugavi.settings import BASE_DIR                                                               
 
 dotenv_file = BASE_DIR / '.env.production'
 dotenv.load_dotenv(dotenv_file)
