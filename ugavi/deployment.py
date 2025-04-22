@@ -38,9 +38,15 @@ CSRF_COOKIE_SECURE = True
 
 AUTH_COOKIE_SECURE=True
 
-if os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING'):
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get('AZURE_POSTGRESQL_CONNECTIONSTRING')),
+CONNECTION = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+CONNECTION_STR = {pair.split('=')[0]:pair.split('=')[1] for pair in CONNECTION.split(' ')}
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": CONNECTION_STR['dbname'],
+        "HOST": CONNECTION_STR['host'],
+        "USER": CONNECTION_STR['user'],
+        "PASSWORD": CONNECTION_STR['password'],
     }
-                           
+}                 
