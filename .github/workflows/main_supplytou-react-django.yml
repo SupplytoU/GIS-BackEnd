@@ -28,13 +28,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gdal-bin libgdal-dev
-
-      - name: Export GDAL_LIBRARY_PATH
-        run: |
-          echo "GDAL_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu" >> $GITHUB_ENV
-          echo "/usr/lib/x86_64-linux-gnu" | sudo tee -a /etc/ld.so.conf.d/gdal.conf
-          sudo ldconfig
-
+          
       - name: Create and start virtual environment
         run: |
           python -m venv venv
