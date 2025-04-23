@@ -44,10 +44,11 @@ jobs:
 
       - name: Run tests
         env:
-          DB_NAME: ci_test_db
-          DB_USER: ci_user
-          DB_PASSWORD: ci_password
-          DB_HOST: localhost
-          DB_PORT: 5432
+          DATABASE_ENGINE: 'django.contrib.gis.db.backends.postgis'
+          DATABASE_NAME: ci_test_db
+          DATABASE_USER: ci_user
+          DATABASE_PASSWORD: ci_password
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
         run: |
           python manage.py test
