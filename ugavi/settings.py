@@ -16,6 +16,15 @@ from pathlib import Path
 import dotenv
 from django.core.management.utils import get_random_secret_key
 
+import os
+from ctypes.util import find_library
+
+GDAL_LIBRARY_PATH = os.environ.get(
+    "GDAL_LIBRARY_PATH",
+    find_library("gdal")
+)
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
