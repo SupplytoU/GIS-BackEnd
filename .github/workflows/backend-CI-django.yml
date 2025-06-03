@@ -1,0 +1,54 @@
+name: Django Backend CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install and start PostgreSQL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql postgresql-contrib postgis
+          sudo systemctl start postgresql
+          sudo systemctl status postgresql  
+          timeout 20 bash -c 'until sudo -u postgres psql -c "SELECT 1" >/dev/null 2>&1; do sleep 1; done'
+
+      - name: Setup test database
+        run: |
+          sudo -u postgres psql -c "CREATE DATABASE ci_test_db;"
+          sudo -u postgres psql -c "CREATE USER ci_user WITH PASSWORD 'ci_password';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE ci_test_db TO ci_user;"
+          sudo -u postgres psql -d ci_test_db -c "CREATE EXTENSION postgis;"
+          sudo -u postgres psql -c "ALTER USER ci_user CREATEDB;"  # For Django test database creation
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          DATABASE_ENGINE: 'django.contrib.gis.db.backends.postgis'
+          DATABASE_NAME: ci_test_db
+          DATABASE_USER: ci_user
+          DATABASE_PASSWORD: ci_password
+          DATABASE_HOST: localhost
+          DATABASE_PORT: 5432
+        run: |
+          python manage.py test

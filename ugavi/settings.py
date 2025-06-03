@@ -16,15 +16,12 @@ from pathlib import Path
 import dotenv
 from django.core.management.utils import get_random_secret_key
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 dotenv_file = BASE_DIR / '.env.local'
-
-if path.isfile(dotenv_file):
-    dotenv.load_dotenv(dotenv_file)
+dotenv.load_dotenv(dotenv_file)
 
 
 DEVELOPMENT_MODE = getenv("DEVELOPMENT_MODE", "False") == "True"
@@ -41,8 +38,7 @@ SECRET_KEY = getenv('DJANGO_SECRET_KEY', get_random_secret_key())
 DEBUG = getenv('DEBUG', 'False') == 'True'
 
 
-ALLOWED_HOSTS = getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1,localhost').split(",")
-
+ALLOWED_HOSTS = getenv('DJANGO_ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
@@ -64,11 +60,9 @@ INSTALLED_APPS = [
     'users',
     'fieldmapping',
     'trackapp',
-    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -77,11 +71,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
-INTERNAL_IPS = [
+# Debug toolbar for development
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
+
+INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
@@ -109,22 +107,16 @@ WSGI_APPLICATION = 'ugavi.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if DEVELOPMENT_MODE is True:
-    DATABASES = {
+DATABASES = {
     'default': {
         'ENGINE': getenv('DATABASE_ENGINE'),
         'NAME': getenv('DATABASE_NAME'),
-        'USER' : getenv('DATABASE_USER'),
-        'PASSWORD' : getenv('DATABASE_PASSWORD'),
-        'HOST' : getenv('DATABASE_HOST'),
+        'USER': getenv('DATABASE_USER'),
+        'PASSWORD': getenv('DATABASE_PASSWORD'),
+        'HOST': getenv('DATABASE_HOST'),
     }
 }
-elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if getenv('DATABASE_URL', None) is None:
-        raise Exception('DATABASE_URL environment variable not defined')
-    DATABASES = {
-        'default': dj_database_url.parse(getenv('DATABASE_URL')),
-    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -160,16 +152,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-if DEVELOPMENT_MODE is True:
-    STATIC_URL = '/static/'
-    STATICFILES_DIRS = [
-        BASE_DIR / 'static',
-    ]
-    STATIC_ROOT = BASE_DIR / 'staticfiles' 
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
-else:
-    pass
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Email configs
 EMAIL_BACKEND = getenv('EMAIL_BACKEND')
@@ -178,7 +164,7 @@ EMAIL_HOST = getenv('EMAIL_HOST')
 EMAIL_HOST_PASSWORD = getenv('EMAIL_HOST_PASSWORD')
 EMAIL_HOST_USER = getenv('EMAIL_HOST_USER')
 EMAIL_PORT = 587
-EMAIL_USE_TLS = 'True'
+EMAIL_USE_TLS = getenv('EMAIL_USE_TLS', 'True') == 'True'
 DEFAULT_FROM_EMAIL = getenv('EMAIL_HOST_USER')
 DOMAIN = getenv('DOMAIN')
 # DOMAIN = 'https://supply2u.jhubafrica.com/'
@@ -190,25 +176,26 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'users.authentication.CustomJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.IsAuthenticated'
     ]
 }
 
-REDIRECT_URLS = getenv('REDIRECT_URLS', 'http://localhost:3000/auth/google, https://127.0.0.1:3000').split(',')
+REDIRECT_URLS = getenv(
+    'REDIRECT_URLS', 'http://localhost:3000/auth/google, https://127.0.0.1:3000').split(',')
 
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': True,
-    'USER_CREATE_PASSWORD_RETYPE' : True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_RETYPE':True,
-    'LOGOUT_ON_PASSWORD_CHANGE':True,
-    'TOKEN_MODEL':None,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'LOGOUT_ON_PASSWORD_CHANGE': True,
+    'TOKEN_MODEL': None,
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': REDIRECT_URLS,
     'SERIALIZERS': {},
 }
@@ -223,17 +210,17 @@ LEAFLET_CONFIG = {
     'TILES': 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     'DEFAULT_SRID': 4326,
     'DEFAULT_MAP_HEIGHT': '800px',
-    'DEFAULT_MAP_WIDTH':'800px'
+    'DEFAULT_MAP_WIDTH': '800px'
 }
 
 
 AUTH_COOKIE = 'access'
 AUTH_COOKIE_ACCESS_MAX_AGE = 60 * 10
 AUTH_COOKIE_REFRESH_MAX_AGE = 60 * 60 * 24
-AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True') == 'True' 
+AUTH_COOKIE_SECURE = getenv('AUTH_COOKIE_SECURE', 'True') == 'True'
 AUTH_COOKIE_HTTP_ONLY = True
 AUTH_COOKIE_PATH = '/'
-AUTH_COOKIE_SAMESITE = 'None'  # cross-origin cookies
+AUTH_COOKIE_SAMESITE = 'None'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = getenv('GOOGLE_AUTH_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = getenv('GOOGLE_AUTH_SECRET_KEY')
@@ -243,13 +230,10 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'openid'
 ]
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
-
-CORS_ALLOWED_ORIGINS = getenv(
-    'CORS_ALLOWED_ORIGINS', 
-    'http://localhost:3000, http://127.0.0.1.3000'
-).split(',')
-
-
+cors_origins = getenv(
+    'CORS_ALLOWED_ORIGINS', ''
+)
+CORS_ALLOWED_ORIGINS = cors_origins.split(',') if cors_origins else []
 CORS_ALLOW_CREDENTIALS = True
 
 # Default primary key field type
