@@ -62,6 +62,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy project files
 COPY . .
 
+# Add entrypoint script
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Start Gunicorn
-CMD bash ./build_script.sh gunicorn ugavi.wsgi:application --bind 0.0.0.0:${PORT} --workers=3 --timeout=120
+# Set entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]
